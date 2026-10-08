@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RecipeManager.ViewModels"
+             x:Class="RecipeManager.Views.AddRecipePage"
+             x:DataType="vm:AddRecipeViewModel"
+             Title="Create Custom Recipe"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ScrollView Padding="16,16,16,30">
+        <VerticalStackLayout Spacing="16"
+                            MaximumWidthRequest="{OnIdiom Phone=10000, Desktop=850}"
+                            HorizontalOptions="Center">
+
+            <!-- Top Header with Back Button -->
+            <Grid ColumnDefinitions="Auto, *" Margin="0,0,0,4" ColumnSpacing="12">
+                <Button Grid.Column="0"
+                        Text="←"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        WidthRequest="38"
+                        HeightRequest="38"
+                        CornerRadius="6"
+                        Padding="0" />
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                    <Label Text="CULINARY STUDIO" FontSize="10" FontAttributes="Bold" TextColor="#FF5722" CharacterSpacing="1" />
+                    <Label Text="Author Secret Recipe" FontSize="17" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="🍳 Basic Details"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+
+                    <!-- Title -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Recipe Title *" FontAttributes="Bold" FontSize="13" TextColor="#64748B" />
+                        <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="10,0">
+                            <Entry Placeholder="e.g. Royal Hyderabadi Dum Chicken Biryani"
+                                   Text="{Binding TitleText}"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Category & Difficulty Pickers -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="6">
+                            <Label Text="Category" FontAttributes="Bold" FontSize="13" TextColor="#64748B" />
+                            <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="6,0">
+                                <Picker ItemsSource="{Binding AvailableCategories}"
+                                        SelectedItem="{Binding Category}"
+                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="Skill Level" FontAttributes="Bold" FontSize="13" TextColor="#64748B" />
+                            <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="6,0">
+                                <Picker ItemsSource="{Binding Difficulties}"
+                                        SelectedItem="{Binding Difficulty}"
+                                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Times and Servings Grid -->
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="10">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Prep (min)" FontSize="12" FontAttributes="Bold" TextColor="#64748B" />
+                            <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="8,0">
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding PrepTimeMinutes}"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Cook (min)" FontSize="12" FontAttributes="Bold" TextColor="#64748B" />
+                            <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="8,0">
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding CookTimeMinutes}"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" Spacing="4">
+                            <Label Text="Servings" FontSize="12" FontAttributes="Bold" TextColor="#64748B" />
+                            <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="8,0">
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding Servings}"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Image Presets & URL -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Cover Photo (Tap preset or paste custom URL)" FontAttributes="Bold" FontSize="13" TextColor="#64748B" />
+                        
+                        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                            <HorizontalStackLayout Spacing="6">
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="pasta" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🍝 Pasta" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="chicken" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🍗 Chicken" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="seafood" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🐟 Seafood" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="salad" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🥗 Salad" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="breakfast" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🍳 Breakfast" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}" Padding="8,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelectPresetImageCommand}" CommandParameter="dessert" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="🍰 Dessert" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                                </Border>
+                            </HorizontalStackLayout>
+                        </ScrollView>
+
+                        <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="10,0">
+                            <Entry Placeholder="https://images.unsplash.com/..."
+                                   Text="{Binding ImageUrl}"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ingredients Input -->
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="🥕 Ingredients List (One item per line)"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                    <Label Text="Tip: Include amounts, like '2 tbsp Olive Oil' or '500g Chicken Breast' or '1 cup Mushrooms'"
+                           FontSize="12"
+                           TextColor="#94A3B8" />
+
+                    <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="10">
+                        <Editor HeightRequest="120"
+                                Placeholder="500g Pasta&#x0a;2 cloves Garlic, minced&#x0a;1 cup Heavy Cream&#x0a;Salt and pepper to taste"
+                                Text="{Binding IngredientsText}"
+                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Instructions Input -->
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="📝 Preparation &amp; Cooking Instructions *"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+
+                    <Border StrokeShape="RoundRectangle 6" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}" BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}" Padding="10">
+                        <Editor HeightRequest="150"
+                                Placeholder="Step 1: Boil salted water and cook pasta until al dente.&#x0a;Step 2: Sauté garlic in olive oil over medium heat.&#x0a;Step 3: Combine with sauce and serve hot."
+                                Text="{Binding Instructions}"
+                                TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="12" Margin="0,8,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#334155}"
+                        TextColor="{AppThemeBinding Light=#475569, Dark=#E2E8F0}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="42" />
+
+                <Button Grid.Column="1"
+                        Text="💾 Save Recipe"
+                        Command="{Binding SaveRecipeCommand}"
+                        BackgroundColor="#FF5722"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="42" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

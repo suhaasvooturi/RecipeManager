@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RecipeManager.ViewModels"
+             xmlns:models="clr-namespace:RecipeManager.Models"
+             xmlns:conv="clr-namespace:RecipeManager.Converters"
+             x:Class="RecipeManager.Views.ShoppingListPage"
+             x:DataType="vm:ShoppingListViewModel"
+             Title="Shopping List"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BoolToStrikethroughConverter x:Key="BoolToStrikethroughConverter" />
+            <conv:StringNotEmptyToBoolConverter x:Key="StringNotEmptyToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *">
+
+        <!-- Progress Tracker Banner Card -->
+        <Border Grid.Row="0" Margin="16,12,16,4"
+                StrokeShape="RoundRectangle 10"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                StrokeThickness="1"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                Padding="16,12">
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*, Auto">
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="🛒" FontSize="16" VerticalOptions="Center"/>
+                        <Label Text="Grocery Cart Progress"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Label Grid.Column="1"
+                            Text="{Binding ProgressPercentageText}"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            TextColor="#10B981"
+                            VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Modern Progress Bar -->
+                <ProgressBar Progress="{Binding CompletionRatio}"
+                             ProgressColor="#10B981"
+                             HeightRequest="6" />
+
+                <Label Text="{Binding SummaryText}"
+                       FontSize="12"
+                       TextColor="#64748B" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Quick Add Pantry Staples Strip (Full of Culinary Options!) -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,4,16,4">
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="Quick Staples:" FontSize="11" FontAttributes="Bold" TextColor="#64748B" VerticalOptions="Center" Margin="0,0,4,0"/>
+                
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Milk" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🥛 Milk" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Eggs" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🥚 Eggs" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Bread" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🍞 Bread" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Olive Oil" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🫒 Olive Oil" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Garlic" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🧄 Garlic" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Tomatoes" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🍅 Tomatoes" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Parmesan" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🧀 Cheese" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding QuickAddStapleCommand}" CommandParameter="Lemon" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ 🍋 Lemon" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"/>
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Custom Item Entry Form (Responsive 2-row on mobile, 1-row on PC) -->
+        <Border Grid.Row="2" Margin="16,4,16,6"
+                StrokeShape="RoundRectangle 10"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                StrokeThickness="1"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                Padding="12,10">
+            <Grid RowDefinitions="{OnIdiom Phone='Auto, Auto', Desktop='Auto'}"
+                  ColumnDefinitions="{OnIdiom Phone='*, Auto', Desktop='*, 110, Auto'}"
+                  RowSpacing="8"
+                  ColumnSpacing="8">
+                <!-- Item Name Entry (Full width on mobile) -->
+                <Border Grid.Row="0" Grid.Column="0"
+                        Grid.ColumnSpan="{OnIdiom Phone=2, Desktop=1}"
+                        StrokeShape="RoundRectangle 6"
+                        Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#374151}"
+                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1F2937}"
+                        Padding="12,0"
+                        HeightRequest="40">
+                    <Entry Placeholder="Add custom item (e.g. Greek Yogurt)"
+                           Text="{Binding NewItemName}"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                           ReturnCommand="{Binding AddItemCommand}" />
+                </Border>
+
+                <!-- Measure Entry -->
+                <Border Grid.Row="{OnIdiom Phone=1, Desktop=0}"
+                        Grid.Column="{OnIdiom Phone=0, Desktop=1}"
+                        StrokeShape="RoundRectangle 6"
+                        Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#374151}"
+                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1F2937}"
+                        Padding="10,0"
+                        HeightRequest="40">
+                    <Entry Placeholder="Qty / Measure (e.g. 500g)"
+                           Text="{Binding NewItemMeasure}"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                           ReturnCommand="{Binding AddItemCommand}" />
+                </Border>
+
+                <!-- Add Button -->
+                <Button Grid.Row="{OnIdiom Phone=1, Desktop=0}"
+                        Grid.Column="{OnIdiom Phone=1, Desktop=2}"
+                        Text="{OnIdiom Phone='➕ Add Item', Desktop='➕ Add'}"
+                        Command="{Binding AddItemCommand}"
+                        BackgroundColor="#FF5722"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        CornerRadius="6"
+                        HeightRequest="40"
+                        Padding="16,0" />
+            </Grid>
+        </Border>
+
+        <!-- Toolbar: Category filter & Action buttons -->
+        <Grid Grid.Row="3" ColumnDefinitions="*, Auto, Auto, Auto" Padding="16,2,16,6" ColumnSpacing="6">
+            <Label Grid.Column="0"
+                   Text="Cart Items"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="#64748B"
+                   VerticalOptions="Center" />
+
+            <Button Grid.Column="1"
+                    Text="📋 Copy"
+                    Command="{Binding ShareListCommand}"
+                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}"
+                    TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    HeightRequest="34"
+                    CornerRadius="8"
+                    Padding="{OnIdiom Phone='8,0', Desktop='12,0'}" />
+
+            <Button Grid.Column="2"
+                    Text="🧹 Done"
+                    Command="{Binding ClearPurchasedCommand}"
+                    BackgroundColor="{AppThemeBinding Light=#FEE2E2, Dark=#371719}"
+                    TextColor="#DC2626"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    HeightRequest="34"
+                    CornerRadius="8"
+                    Padding="{OnIdiom Phone='8,0', Desktop='12,0'}" />
+
+            <Button Grid.Column="3"
+                    Text="🗑️ All"
+                    Command="{Binding ClearAllItemsCommand}"
+                    BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}"
+                    TextColor="#64748B"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    HeightRequest="34"
+                    CornerRadius="8"
+                    Padding="{OnIdiom Phone='8,0', Desktop='12,0'}" />
+        </Grid>
+
+        <!-- Items CollectionView -->
+        <CollectionView Grid.Row="4"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="None"
+                        Margin="16,0,16,16">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ShoppingItem">
+                    <Border Margin="0,2"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                            StrokeThickness="1"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                            Padding="12,8">
+                        <Grid ColumnDefinitions="Auto, *, Auto, Auto" ColumnSpacing="12">
+                            <!-- Purchased Checkbox -->
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding IsPurchased}"
+                                      Color="#10B981"
+                                      VerticalOptions="Center">
+                                <CheckBox.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=TogglePurchasedCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </CheckBox.GestureRecognizers>
+                            </CheckBox>
+
+                            <!-- Item Name & Source -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextDecorations="{Binding IsPurchased, Converter={StaticResource BoolToStrikethroughConverter}}"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                                <Label Text="{Binding RecipeSource}"
+                                       FontSize="11"
+                                       TextColor="#94A3B8"
+                                       IsVisible="{Binding RecipeSource, Converter={StaticResource StringNotEmptyToBoolConverter}}" />
+                            </VerticalStackLayout>
+
+                            <!-- Measure Tag Badge -->
+                            <Border Grid.Column="2"
+                                    StrokeShape="RoundRectangle 8"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#1F2937}"
+                                    Padding="8,3"
+                                    VerticalOptions="Center"
+                                    IsVisible="{Binding Measure, Converter={StaticResource StringNotEmptyToBoolConverter}}">
+                                <Label Text="{Binding Measure}"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#FF5722" />
+                            </Border>
+
+                            <!-- Delete Button -->
+                            <Button Grid.Column="3"
+                                    Text="✕"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=DeleteItemCommand}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#EF4444"
+                                    FontSize="14"
+                                    WidthRequest="32"
+                                    HeightRequest="32"
+                                    Padding="0" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40" Spacing="10">
+                    <Label Text="🛒" FontSize="44" HorizontalOptions="Center" />
+                    <Label Text="Your grocery cart is empty"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                    <Label Text="Tap on quick staples above or add ingredients directly from any recipe!"
+                           FontSize="13"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TextColor="#64748B" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

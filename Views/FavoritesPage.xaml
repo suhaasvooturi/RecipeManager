@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RecipeManager.ViewModels"
+             xmlns:models="clr-namespace:RecipeManager.Models"
+             x:Class="RecipeManager.Views.FavoritesPage"
+             x:DataType="vm:FavoritesViewModel"
+             Title="My CookBook"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+
+    <ScrollView Padding="16,14,16,28">
+        <VerticalStackLayout Spacing="20"
+                            MaximumWidthRequest="{OnIdiom Phone=10000, Desktop=950}"
+                            HorizontalOptions="Center">
+
+            <!-- CookBook Header & Author Quick Button -->
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light=#FED7AA, Dark=#371B04}"
+                    BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#1E150B}"
+                    Padding="16,14">
+                <Grid ColumnDefinitions="*, Auto">
+                    <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+                        <Label Text="📖 PERSONAL CULINARY ARCHIVE"
+                               FontSize="10"
+                               FontAttributes="Bold"
+                               TextColor="#EA580C"
+                               CharacterSpacing="1" />
+                        <Label Text="Your Curated Kitchen Collection"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1"
+                            Text="➕ Author Dish"
+                            Command="{Binding NavigateToAddRecipeCommand}"
+                            BackgroundColor="#FF5722"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="12"
+                            CornerRadius="6"
+                            HeightRequest="36"
+                            Padding="12,0"
+                            VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Section 1: My Custom Recipes -->
+            <VerticalStackLayout Spacing="10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="👨‍🍳" FontSize="18" VerticalOptions="Center"/>
+                        <Label Text="My Custom Creations"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 6"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                            Padding="8,3">
+                        <Label Text="{Binding CustomRecipes.Count, StringFormat='{0} created'}"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#10B981" />
+                    </Border>
+                </Grid>
+
+                <!-- Custom Recipes List -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CustomRecipes}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:CustomRecipe">
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                                    Padding="12">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=OpenCustomRecipeCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12">
+                                    <Border StrokeShape="RoundRectangle 6" StrokeThickness="0" WidthRequest="74" HeightRequest="74">
+                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Border StrokeShape="RoundRectangle 4" StrokeThickness="0" BackgroundColor="#10B981" Padding="6,2">
+                                                <Label Text="CUSTOM" TextColor="White" FontSize="9" FontAttributes="Bold" />
+                                            </Border>
+                                            <Label Text="{Binding Category}" FontSize="12" TextColor="#FF5722" FontAttributes="Bold" VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+
+                                        <Label Text="{Binding Title}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                               LineBreakMode="TailTruncation" />
+
+                                        <Label Text="{Binding TotalTimeString, StringFormat='⏱ {0}'}"
+                                               FontSize="11"
+                                               TextColor="#64748B" />
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="2"
+                                            Text="✕"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=DeleteCustomRecipeCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#EF4444"
+                                            FontSize="14"
+                                            WidthRequest="36"
+                                            HeightRequest="36"
+                                            Padding="0" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Empty Custom Recipes state -->
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#374151}"
+                        StrokeDashArray="4,4"
+                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
+                        Padding="18"
+                        IsVisible="{Binding HasNoCustom}">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="No custom recipes authored yet"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Tap '➕ New Recipe' on the Discover tab to write down your favorite personal creations."
+                               FontSize="12"
+                               TextColor="#64748B"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Section 2: Bookmarked Online Recipes -->
+            <VerticalStackLayout Spacing="10" Margin="0,8,0,0">
+                <Grid ColumnDefinitions="*, Auto">
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="⭐" FontSize="18" VerticalOptions="Center"/>
+                        <Label Text="Bookmarked Favorites"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 6"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#371B04}"
+                            Padding="8,3">
+                        <Label Text="{Binding FavoriteRecipes.Count, StringFormat='{0} saved'}"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="#FF5722" />
+                    </Border>
+                </Grid>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding FavoriteRecipes}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:FavoriteRecipe">
+                            <Border StrokeShape="RoundRectangle 8"
+                                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                                    Padding="12">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=OpenFavoriteRecipeCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12">
+                                    <Border StrokeShape="RoundRectangle 6" StrokeThickness="0" WidthRequest="74" HeightRequest="74">
+                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                        <Border HorizontalOptions="Start" StrokeShape="RoundRectangle 4" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#371B04}" Padding="6,2">
+                                            <Label Text="{Binding Category}" FontSize="10" TextColor="#FF5722" FontAttributes="Bold" />
+                                        </Border>
+                                        <Label Text="{Binding Title}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                               LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding Area, StringFormat='Origin: {0}'}"
+                                               FontSize="11"
+                                               TextColor="#64748B" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Empty Favorites state -->
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#374151}"
+                        StrokeDashArray="4,4"
+                        BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#111827}"
+                        Padding="18"
+                        IsVisible="{Binding HasNoFavorites}">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="No bookmarked recipes yet"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}"
+                               HorizontalTextAlignment="Center" />
+                        <Label Text="Tap the ❤️ button on any dish to bookmark it here for instant offline access."
+                               FontSize="12"
+                               TextColor="#64748B"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

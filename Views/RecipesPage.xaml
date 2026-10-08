@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RecipeManager.ViewModels"
+             xmlns:models="clr-namespace:RecipeManager.Models"
+             xmlns:conv="clr-namespace:RecipeManager.Converters"
+             x:Class="RecipeManager.Views.RecipesPage"
+             x:DataType="vm:RecipesViewModel"
+             Title="Discover Recipes"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:NotNullToBoolConverter x:Key="NotNullToBoolConverter" />
+            <conv:FavoriteIconConverter x:Key="FavoriteIconConverter" />
+            <conv:CategorySelectionBackgroundConverter x:Key="CategoryBgConverter" />
+            <conv:CategorySelectionTextColorConverter x:Key="CategoryTextConverter" />
+            <conv:CategorySelectionBorderColorConverter x:Key="CategoryBorderConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+        <!-- Top Gourmet Brand Search and Action Bar -->
+        <VerticalStackLayout Grid.Row="0" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}" Padding="16,12,16,12" Spacing="10">
+            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12">
+                <!-- App Official Brand Logo -->
+                <Border WidthRequest="42"
+                        HeightRequest="42"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="{AppThemeBinding Light=#FED7AA, Dark=#374151}"
+                        StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#1E293B}"
+                        Padding="2"
+                        VerticalOptions="Center">
+                    <Image Source="app_logo.png" Aspect="AspectFit" WidthRequest="38" HeightRequest="38" />
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <Label Text="RECIPES STUDIO"
+                           FontSize="10"
+                           FontAttributes="Bold"
+                           TextColor="#FF5722"
+                           CharacterSpacing="1.4" />
+                    <Label Text="Culinary Kitchen &amp; CookBook"
+                           FontSize="{OnIdiom Phone=16, Desktop=19}"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                           LineBreakMode="TailTruncation" />
+                </VerticalStackLayout>
+
+                <Button Grid.Column="2"
+                        Text="{OnIdiom Phone='➕ New', Desktop='➕ New Recipe'}"
+                        Command="{Binding NavigateToAddRecipeCommand}"
+                        BackgroundColor="#FF5722"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="{OnIdiom Phone=12, Desktop=13}"
+                        CornerRadius="8"
+                        HeightRequest="38"
+                        Padding="{OnIdiom Phone='12,0', Desktop='16,0'}"
+                        VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Search Bar in Crisp Professional Container -->
+            <Border StrokeShape="RoundRectangle 8"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1F2937}"
+                    Padding="6,0">
+                <SearchBar x:Name="RecipeSearchBar"
+                           Placeholder="Search Biryani, Chicken, Mutton, Pasta, Desserts..."
+                           Text="{Binding SearchQuery}"
+                           SearchCommand="{Binding SearchCommand}"
+                           PlaceholderColor="#94A3B8"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                           CancelButtonColor="#FF5722" />
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- Categories Sleek Segmented Strip -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,8,16,6">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Categories}" Spacing="8">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:CategoryItem">
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{Binding IsSelected, Converter={StaticResource CategoryBorderConverter}}"
+                                StrokeThickness="1"
+                                BackgroundColor="{Binding IsSelected, Converter={StaticResource CategoryBgConverter}}"
+                                Padding="12,6">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesViewModel}}, Path=FilterByCategoryCommand}"
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding DisplayName}"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   TextColor="{Binding IsSelected, Converter={StaticResource CategoryTextConverter}}" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Quick Filter Options Toolbar -->
+        <ScrollView Grid.Row="2" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Padding="16,2,16,8">
+            <HorizontalStackLayout Spacing="8">
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                        Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ApplyQuickFilterCommand}" CommandParameter="All" />
+                    </Border.GestureRecognizers>
+                    <Label Text="🔥 All Dishes" FontSize="11" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#FED7AA, Dark=#371B04}"
+                        BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#1E150B}"
+                        Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ApplyQuickFilterCommand}" CommandParameter="Quick30" />
+                    </Border.GestureRecognizers>
+                    <Label Text="⚡ Under 30 Mins" FontSize="11" FontAttributes="Bold" TextColor="#EA580C" />
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#FCE7F3, Dark=#2E0A1E}"
+                        BackgroundColor="{AppThemeBinding Light=#FDF2F8, Dark=#1E0814}"
+                        Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ApplyQuickFilterCommand}" CommandParameter="Favorites" />
+                    </Border.GestureRecognizers>
+                    <Label Text="❤️ Favorites Only" FontSize="11" FontAttributes="Bold" TextColor="#DB2777" />
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#D1FAE5, Dark=#062B1D}"
+                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#042016}"
+                        Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ApplyQuickFilterCommand}" CommandParameter="Custom" />
+                    </Border.GestureRecognizers>
+                    <Label Text="👨‍🍳 My Creations" FontSize="11" FontAttributes="Bold" TextColor="#059669" />
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 8"
+                        Stroke="{AppThemeBinding Light=#E0E7FF, Dark=#1E1B4B}"
+                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#131138}"
+                        Padding="10,5">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenSurpriseRecipeCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="🎲 Surprise Me" FontSize="11" FontAttributes="Bold" TextColor="#4F46E5" />
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Main Content Area: Featured Recipe & Recipe List via CollectionView with Header -->
+        <RefreshView Grid.Row="3" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Recipes}"
+                            SelectionMode="None"
+                            Margin="16,0,16,16">
+
+                <!-- Collection Header: Chef Spotlight & Section Title -->
+                <CollectionView.Header>
+                    <VerticalStackLayout Spacing="16" Margin="0,4,0,14">
+                        <!-- Loading Indicator -->
+                        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                           IsVisible="{Binding IsBusy}"
+                                           Color="#FF5722"
+                                           HeightRequest="32" />
+
+                        <!-- Featured Recipe Hero Card with Crisp Modern Borders -->
+                        <Border StrokeShape="RoundRectangle 12"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                                IsVisible="{Binding FeaturedRecipe, Converter={StaticResource NotNullToBoolConverter}}"
+                                Padding="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenRecipeDetailCommand}"
+                                                      CommandParameter="{Binding FeaturedRecipe}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid RowDefinitions="200, Auto">
+                                <!-- Hero Image -->
+                                <Image Grid.Row="0"
+                                       Source="{Binding FeaturedRecipe.ImageUrl}"
+                                       Aspect="AspectFill" />
+
+                                <!-- Dark Gradient Scrim Overlay -->
+                                <BoxView Grid.Row="0"
+                                         Color="#50000000" />
+
+                                <!-- Floating Chef's Choice Badge -->
+                                <Border Grid.Row="0"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Start"
+                                        Margin="12"
+                                        Padding="10,4"
+                                        StrokeShape="RoundRectangle 6"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#FF5722">
+                                    <Label Text="⭐ CHEF'S DAILY SPOTLIGHT"
+                                           TextColor="White"
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           CharacterSpacing="0.8" />
+                                </Border>
+
+                                <!-- Hero Card Body -->
+                                <VerticalStackLayout Grid.Row="1" Padding="16,14" Spacing="6" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+                                    <Label Text="{Binding FeaturedRecipe.Title}"
+                                           FontSize="19"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Border StrokeShape="RoundRectangle 6" StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#371B04}" Padding="8,2">
+                                            <Label Text="{Binding FeaturedRecipe.Category}" TextColor="#FF5722" FontSize="11" FontAttributes="Bold" />
+                                        </Border>
+                                        <Label Text="{Binding FeaturedRecipe.CuisineFlag}"
+                                               FontSize="12"
+                                               TextColor="#64748B"
+                                               VerticalOptions="Center" />
+                                        <Label Text="{Binding FeaturedRecipe.EstimatedTimeText}"
+                                               FontSize="12"
+                                               TextColor="#64748B"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+
+                                    <Label Text="Tap to view step-by-step cooking tutorial &amp; ingredients →"
+                                           FontSize="12"
+                                           TextColor="#94A3B8"
+                                           Margin="0,4,0,0" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <!-- Section Header with Recipe Counter -->
+                        <Grid ColumnDefinitions="*, Auto" Margin="0,4,0,0">
+                            <Label Text="Popular &amp; Curated Dishes"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                   VerticalOptions="Center" />
+                            <Border Grid.Column="1"
+                                    StrokeShape="RoundRectangle 6"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#1F2937}"
+                                    Padding="8,3">
+                                <Label Text="{Binding Recipes.Count, StringFormat='{0} dishes'}"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="#FF5722" />
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </CollectionView.Header>
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="{OnIdiom Phone=1, Tablet=2, Desktop=3}"
+                                     HorizontalItemSpacing="12"
+                                     VerticalItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Recipe">
+                        <Border StrokeShape="RoundRectangle 10"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                                Padding="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesViewModel}}, Path=OpenRecipeDetailCommand}"
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid RowDefinitions="{OnIdiom Phone='180, Auto', Desktop='145, Auto'}">
+                                <!-- Recipe Thumbnail -->
+                                <Image Grid.Row="0"
+                                       Source="{Binding ImageUrl}"
+                                       Aspect="AspectFill" />
+
+                                <!-- Custom / Category Badge Floating Top Left -->
+                                <Border Grid.Row="0"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Start"
+                                        Margin="8"
+                                        Padding="8,3"
+                                        StrokeShape="RoundRectangle 6"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#FF5722">
+                                    <Label Text="{Binding Category}" TextColor="White" FontSize="10" FontAttributes="Bold" />
+                                </Border>
+
+                                <!-- Favorite Heart Quick Button Floating Top Right -->
+                                <Button Grid.Row="0"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        Margin="8"
+                                        WidthRequest="34"
+                                        HeightRequest="34"
+                                        CornerRadius="8"
+                                        Padding="0"
+                                        BackgroundColor="#CC000000"
+                                        Text="{Binding IsFavorite, Converter={StaticResource FavoriteIconConverter}}"
+                                        FontSize="14"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipesViewModel}}, Path=ToggleCardFavoriteCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                                <!-- Recipe Info -->
+                                <VerticalStackLayout Grid.Row="1" Padding="12,10" Spacing="4">
+                                    <Label Text="{Binding Title}"
+                                           FontSize="{OnIdiom Phone=15, Desktop=14}"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <Label Text="{Binding EstimatedTimeText}"
+                                               FontSize="12"
+                                               TextColor="#64748B"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding RatingText}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="#F59E0B"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <Label Text="{Binding CategoryAreaSubtitle}"
+                                           FontSize="11"
+                                           TextColor="#94A3B8"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40" Spacing="10">
+                        <Label Text="🔍" FontSize="44" HorizontalOptions="Center" />
+                        <Label Text="No matching recipes found"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}" />
+                        <Label Text="Try searching for another dish or ingredient (e.g. Pasta, Chicken, Salad, Soup)."
+                               FontSize="13"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#64748B" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+
+</ContentPage>

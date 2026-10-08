@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RecipeManager.Views.SplashPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0B0F19}">
+
+    <Grid>
+        <!-- Elegant subtle background gradient effect -->
+        <BoxView BackgroundColor="{AppThemeBinding Light=#FFF8F5, Dark=#0F172A}" />
+
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="20"
+                             Padding="30"
+                             MaximumWidthRequest="450">
+
+            <!-- Logo Container with Elevation Shadow and Smooth Cornering -->
+            <Border x:Name="LogoContainer"
+                    WidthRequest="140"
+                    HeightRequest="140"
+                    StrokeShape="RoundRectangle 28"
+                    Stroke="{AppThemeBinding Light=#FDBA74, Dark=#374151}"
+                    StrokeThickness="2"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+                    HorizontalOptions="Center"
+                    Shadow="{OnPlatform Default={Shadow Brush='#40FF5722', Radius=24, Offset='0,10'}}">
+                <Image x:Name="LogoImage"
+                       Source="app_logo.png"
+                       Aspect="AspectFit"
+                       WidthRequest="136"
+                       HeightRequest="136" />
+            </Border>
+
+            <!-- Brand Typography -->
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label x:Name="AppTitleLabel"
+                       Text="Recipes"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                       HorizontalTextAlignment="Center"
+                       CharacterSpacing="1" />
+
+                <Label x:Name="AppTaglineLabel"
+                       Text="CULINARY STUDIO • GOURMET KITCHEN"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       TextColor="#FF5722"
+                       HorizontalTextAlignment="Center"
+                       CharacterSpacing="1.8" />
+            </VerticalStackLayout>
+
+            <!-- Subtle Progress Bar and Status Message -->
+            <VerticalStackLayout Spacing="8" Margin="0,15,0,0" WidthRequest="220" HorizontalOptions="Center">
+                <ProgressBar x:Name="SplashProgressBar"
+                             ProgressColor="#FF5722"
+                             Progress="0"
+                             HeightRequest="4" />
+
+                <Label x:Name="StatusLabel"
+                       Text="Loading culinary studio..."
+                       FontSize="11"
+                       TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Bottom Signature Badge -->
+        <Label VerticalOptions="End"
+               HorizontalOptions="Center"
+               Margin="0,0,0,24"
+               Text="Original Edition • 100% Authentic Recipes"
+               FontSize="11"
+               TextColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
+               CharacterSpacing="0.8" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,27 @@
+## .NET & Visual Studio
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build & Distribution Artifacts
+dist/
+RecipeManager-Windows11/
+*.zip
+*.apk
+*.aab
+
+## Local Database & Cache
+*.db3
+*.db3-journal
+*.db
+*.db-journal
+
+## OS Files
+.DS_Store
+Thumbs.db

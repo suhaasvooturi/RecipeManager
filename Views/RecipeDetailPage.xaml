@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RecipeManager.ViewModels"
+             xmlns:models="clr-namespace:RecipeManager.Models"
+             xmlns:conv="clr-namespace:RecipeManager.Converters"
+             x:Class="RecipeManager.Views.RecipeDetailPage"
+             x:DataType="vm:RecipeDetailViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0B0F19}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:StringNotEmptyToBoolConverter x:Key="StringNotEmptyToBoolConverter" />
+            <conv:FavoriteIconConverter x:Key="FavoriteIconConverter" />
+            <conv:BoolToStrikethroughConverter x:Key="BoolToStrikethroughConverter" />
+            <conv:StepCompletedColorConverter x:Key="StepCompletedColorConverter" />
+            <conv:StepCompletedBgConverter x:Key="StepCompletedBgConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0"
+                            MaximumWidthRequest="{OnIdiom Phone=10000, Desktop=950}"
+                            HorizontalOptions="Center">
+            <!-- Hero Image Banner with Scrim Overlay -->
+            <Grid HeightRequest="280">
+                <Image Source="{Binding Recipe.ImageUrl}"
+                       Aspect="AspectFill" />
+
+                <!-- Floating Glassmorphic Back Button -->
+                <Button HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        Margin="16,14"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        CornerRadius="20"
+                        Padding="0"
+                        BackgroundColor="#99000000"
+                        TextColor="White"
+                        Text="←"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        Command="{Binding GoBackCommand}" />
+
+                <!-- Deep Gradient Overlay -->
+                <BoxView VerticalOptions="End"
+                         HeightRequest="150"
+                         Color="#CC000000" />
+
+                <!-- Floating Tags & Title -->
+                <VerticalStackLayout VerticalOptions="End" Padding="20,18" Spacing="6">
+                    <HorizontalStackLayout Spacing="8">
+                        <Border StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="#FF5722" Padding="8,3">
+                            <Label Text="{Binding Recipe.Category}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="#20FFFFFF" Padding="8,3">
+                            <Label Text="{Binding Recipe.CuisineFlag}" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                        </Border>
+                        <Border StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="#20FFFFFF" Padding="8,3">
+                            <Label Text="{Binding Recipe.RatingText}" TextColor="#FDE047" FontSize="11" FontAttributes="Bold" />
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding Recipe.Title}"
+                           TextColor="White"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Gourmet Kitchen Stats Strip -->
+            <Border StrokeThickness="0" BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1E293B}" Padding="16,10">
+                <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                    <HorizontalStackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
+                        <Label Text="⏱️" FontSize="14" VerticalOptions="Center"/>
+                        <Label Text="{Binding Recipe.EstimatedTimeText}" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="Center">
+                        <Label Text="👥" FontSize="14" VerticalOptions="Center"/>
+                        <Label Text="{Binding ServingsText}" FontSize="12" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="Center">
+                        <Label Text="🌿" FontSize="14" VerticalOptions="Center"/>
+                        <Label Text="Fresh Made" FontSize="12" FontAttributes="Bold" TextColor="#10B981" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Actions Bar: Grocery List, Meal Plan, Share, Favorite -->
+            <Grid ColumnDefinitions="*, *, Auto, Auto" Padding="16,12" ColumnSpacing="8" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}">
+                <Button Grid.Column="0"
+                        Text="🛒 Grocery"
+                        Command="{Binding AddToShoppingListCommand}"
+                        BackgroundColor="#FF5722"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="42" />
+
+                <Button Grid.Column="1"
+                        Text="📅 Plan Meal"
+                        Command="{Binding AddToMealPlanCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}"
+                        TextColor="{AppThemeBinding Light=#059669, Dark=#34D399}"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="42" />
+
+                <Button Grid.Column="2"
+                        Text="📋"
+                        Command="{Binding ShareRecipeCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}"
+                        TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                        FontSize="16"
+                        WidthRequest="42"
+                        HeightRequest="42"
+                        CornerRadius="8" />
+
+                <Button Grid.Column="3"
+                        Text="{Binding IsFavorite, Converter={StaticResource FavoriteIconConverter}}"
+                        Command="{Binding ToggleFavoriteCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#1F2937}"
+                        TextColor="#FF5722"
+                        FontSize="18"
+                        WidthRequest="42"
+                        HeightRequest="42"
+                        CornerRadius="8" />
+            </Grid>
+
+            <!-- YouTube Video Tutorial Link (if available) -->
+            <Border Margin="16,10"
+                    Padding="14,12"
+                    StrokeShape="RoundRectangle 8"
+                    Stroke="#EF4444"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FEF2F2, Dark=#2C0B0E}"
+                    IsVisible="{Binding Recipe.YoutubeUrl, Converter={StaticResource StringNotEmptyToBoolConverter}}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenYoutubeTutorialCommand}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto, *">
+                    <Label Text="▶️" FontSize="22" VerticalOptions="Center" Margin="0,0,12,0"/>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <Label Text="Watch Step-by-Step Cooking Video"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="#DC2626" />
+                        <Label Text="Tap to open high-definition tutorial on YouTube"
+                               FontSize="12"
+                               TextColor="#991B1B" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Content Body: Ingredients & Instructions -->
+            <VerticalStackLayout Padding="16,6,16,30" Spacing="16">
+
+                <!-- Ingredients Section Card with Live Servings Scaler -->
+                <Border StrokeShape="RoundRectangle 10"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                        StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="🥕" FontSize="18" VerticalOptions="Center" />
+                                <Label Text="Ingredients"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <!-- Interactive Servings Scaler Buttons -->
+                            <Border Grid.Column="1"
+                                    StrokeShape="RoundRectangle 6"
+                                    Stroke="{AppThemeBinding Light=#FED7AA, Dark=#374151}"
+                                    BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#1E150B}"
+                                    Padding="4,2">
+                                <HorizontalStackLayout Spacing="4">
+                                    <Button Text="−"
+                                            Command="{Binding DecreaseServingsCommand}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#FF5722"
+                                            FontSize="16"
+                                            FontAttributes="Bold"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            Padding="0" />
+                                    <Label Text="{Binding ServingsText}"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#EA580C"
+                                           VerticalOptions="Center" />
+                                    <Button Text="+"
+                                            Command="{Binding IncreaseServingsCommand}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#FF5722"
+                                            FontSize="16"
+                                            FontAttributes="Bold"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            Padding="0" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" />
+
+                        <!-- Ingredients List -->
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingredients}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:RecipeIngredient">
+                                    <Border StrokeShape="RoundRectangle 6"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#1E293B}"
+                                            Padding="12,8">
+                                         <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="10">
+                                            <Label Text="✓" TextColor="#10B981" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Name}"
+                                                   FontSize="13"
+                                                   TextColor="{AppThemeBinding Light=#0F172A, Dark=#FFFFFF}"
+                                                   VerticalOptions="Center" />
+                                            <Border Grid.Column="2"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    StrokeThickness="0"
+                                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F172A}"
+                                                    Padding="8,2">
+                                                <Label Text="{Binding ScaledMeasure}"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#FF5722" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Instructions Section Card with Interactive Checkable Cooking Mode -->
+                <Border StrokeShape="RoundRectangle 10"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                        StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111827}"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="🍳" FontSize="18" VerticalOptions="Center" />
+                                <Label Text="Cooking Method"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Border Grid.Column="1" StrokeShape="RoundRectangle 6" BackgroundColor="{AppThemeBinding Light=#ECFDF5, Dark=#064E3B}" Padding="8,3">
+                                <Label Text="Interactive Steps" FontSize="11" FontAttributes="Bold" TextColor="#10B981" />
+                            </Border>
+                        </Grid>
+
+                        <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#F1F5F9, Dark=#1F2937}" />
+
+                        <!-- Formatted Interactive Steps Cards -->
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}" Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:InstructionStepItem">
+                                    <Border StrokeShape="RoundRectangle 8"
+                                            StrokeThickness="1"
+                                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#1F2937}"
+                                            BackgroundColor="{Binding IsCompleted, Converter={StaticResource StepCompletedBgConverter}}"
+                                            Padding="12,10">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ToggleStepCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10">
+                                            <!-- Step Number / Completed Badge -->
+                                            <Border Grid.Column="0"
+                                                    StrokeShape="RoundRectangle 6"
+                                                    BackgroundColor="{Binding IsCompleted, Converter={StaticResource StepCompletedBgConverter}}"
+                                                    WidthRequest="28"
+                                                    HeightRequest="28"
+                                                    VerticalOptions="Start">
+                                                <Label Text="{Binding StepNumber, StringFormat='{0}'}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       TextColor="{Binding IsCompleted, Converter={StaticResource StepCompletedColorConverter}}" />
+                                            </Border>
+
+                                            <!-- Step Text with Strikethrough when done -->
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Instruction}"
+                                                   FontSize="13"
+                                                   LineHeight="1.3"
+                                                   TextDecorations="{Binding IsCompleted, Converter={StaticResource BoolToStrikethroughConverter}}"
+                                                   TextColor="{Binding IsCompleted, Converter={StaticResource StepCompletedColorConverter}}"
+                                                   VerticalOptions="Center" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
