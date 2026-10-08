@@ -103,9 +103,10 @@ APP_MAD/
 ### 💻 1. On Windows 11
 
 #### Option A: Direct Executable / Downloadable Zip (No build needed)
-A pre-compiled standalone package is ready in the project directory:
-- **Direct Runnable**: [dist/Windows11/RecipeManager.exe](file:///c:/Users/suhaa/Documents/APP_MAD/dist/Windows11/RecipeManager.exe)
-- **Zip Archive**: `RecipeManager-Windows11.zip`
+A pre-compiled standalone package is ready in the project directory or downloadable from GitHub Releases:
+- **GitHub Release Package**: [Download RecipeManager-Windows11.zip (v1.0.0)](https://github.com/suhaasvooturi/RecipeManager/releases/download/v1.0.0/RecipeManager-Windows11.zip)
+- **Local Zip Archive**: `RecipeManager-Windows11.zip`
+- **Direct Runnable (Local)**: `dist/Windows11/RecipeManager.exe`
 > **Important**: If running from `RecipeManager-Windows11.zip`, right-click the ZIP and choose **Extract All** before opening `RecipeManager.exe`. (Double-clicking an .exe directly inside a zip without extracting causes Windows to show a loading cursor and close because dependent DLLs cannot be loaded from compressed storage).
 
 #### Option B: Run via .NET CLI
@@ -123,18 +124,22 @@ dotnet run -f net10.0-windows10.0.19041.0
 
 ### 📱 2. On Android Mobiles / Tablets
 
-#### Option A: Run via Visual Studio (Recommended)
+#### Option A: Direct APK Download (No build needed)
+Download and install the standalone package directly on any Android device:
+- **GitHub Release APK**: [Download RecipeManager.apk (v1.0.0)](https://github.com/suhaasvooturi/RecipeManager/releases/download/v1.0.0/RecipeManager.apk)
+
+#### Option B: Run via Visual Studio (Recommended for Development)
 1. Open `RecipeManager.sln` in **Visual Studio Community**.
 2. If prompted, click **Install Android SDK** (Visual Studio configures the JDK and Android SDK automatically).
 3. Connect an Android phone via USB (with *USB Debugging* enabled) OR select an Android Emulator.
 4. Select `net10.0-android` and press **F5** (Run).
 
-#### Option B: Export Standalone Android APK via CLI
+#### Option C: Export Standalone Android APK via CLI
 When your Android SDK is configured:
 ```powershell
 dotnet publish -f net10.0-android -c Release -p:AndroidPackageFormat=apk
 ```
-The resulting `.apk` file will be generated in `bin/Release/net10.0-android/publish/` and can be downloaded/installed directly onto any Android device!
+The resulting `.apk` file will be generated in `bin/Release/net10.0-android/publish/`!
 
 ---
 
